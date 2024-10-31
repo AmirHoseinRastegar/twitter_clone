@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_clone/feature/auth/controller/auth_controller.dart';
 import 'package:twitter_clone/feature/auth/widgets/auth_textfield.dart';
 
 import '../../../common/common.dart';
@@ -7,17 +9,17 @@ import '../../../constants/constants.dart';
 import '../../../theme/theme.dart';
 import 'login_view.dart';
 
-class SignUpView extends StatefulWidget {
+class SignUpView extends ConsumerStatefulWidget {
   static rout() =>
       MaterialPageRoute(builder: (BuildContext context) => const SignUpView());
 
   const SignUpView({super.key});
 
   @override
-  State<SignUpView> createState() => _SignUpViewState();
+  ConsumerState<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignUpViewState extends State<SignUpView> {
+class _SignUpViewState extends ConsumerState<SignUpView> {
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
@@ -27,6 +29,13 @@ class _SignUpViewState extends State<SignUpView> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void onSignUp() {
+    ref.read(authControllerProvider.notifier).signUp(
+        email: emailController.text,
+        password: passwordController.text,
+        context: context);
   }
 
   @override
@@ -52,7 +61,7 @@ class _SignUpViewState extends State<SignUpView> {
                   alignment: Alignment.topRight,
                   child: RoundedButton(
                     label: 'Done',
-                    onTap: () {},
+                    onTap: onSignUp,
                   ),
                 ),
                 const SizedBox(
