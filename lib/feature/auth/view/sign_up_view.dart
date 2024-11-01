@@ -40,7 +40,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    final isLoading= ref.watch(authControllerProvider);
+    return isLoading?const LoadingScreen(): SafeArea(
       child: Scaffold(
         appBar: UIConstants.appBar(),
         body: Center(

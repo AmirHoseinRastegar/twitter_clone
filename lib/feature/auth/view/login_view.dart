@@ -44,7 +44,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   Widget build(BuildContext context) {
     final isLoading= ref.watch(authControllerProvider);
     return SafeArea(
-      child:isLoading?Loader(): Scaffold(
+      child:isLoading?const LoadingScreen(): Scaffold(
         appBar: UIConstants.appBar(),
         body: Center(
           child: SingleChildScrollView(

@@ -1,3 +1,4 @@
+import 'package:appwrite/models.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,13 @@ import '../../home/view/home_screen.dart';
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {
   return AuthController(authApi: ref.watch(authApiProvider));
+});
+///since we are using future provider its not needed to use Either in
+///auth_api current user session function because future provider has inner error management
+
+final futureSessionProvider = FutureProvider((ref) {
+  final authSessionController = ref.watch(authControllerProvider.notifier);
+  return authSessionController.currentUser();
 });
 
 class AuthController extends StateNotifier<bool> {
@@ -40,6 +48,8 @@ class AuthController extends StateNotifier<bool> {
     );
     state = false;
   }
+
+  Future<User?> currentUser() => _authApi.currentUserSession();
 
   void login({
     required String email,

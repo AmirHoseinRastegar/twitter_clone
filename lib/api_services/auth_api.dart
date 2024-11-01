@@ -26,6 +26,8 @@ abstract class AuthApi {
     required String email,
     required String password,
   });
+
+  Future<User?> currentUserSession();
 }
 
 class AuthAPiImpl implements AuthApi {
@@ -41,6 +43,7 @@ class AuthAPiImpl implements AuthApi {
     try {
       final acc = await _account.create(
           userId: ID.unique(), email: email, password: password);
+
       return right(acc);
     } on AppwriteException catch (e, str) {
       return left(Failure(e.message ?? 'Something went wrong', str));
@@ -62,6 +65,17 @@ class AuthAPiImpl implements AuthApi {
       return left(Failure(e.message ?? 'Unknown error Occurred', str));
     } catch (e, str) {
       return left(Failure(e.toString(), str));
+    }
+  }
+
+  @override
+  Future<User?> currentUserSession() async {
+    try {
+    return  await _account.get();
+    } on AppwriteException {
+      return null;
+    } catch (e) {
+      return null;
     }
   }
 }
