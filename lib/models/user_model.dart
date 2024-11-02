@@ -61,4 +61,19 @@ class UserModel {
     res.addAll({'is_blue': isBlue});
     return res;
   }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+        profilePic: map['profile_pic'] ?? '',
+        followers: List<String>.from(map['followers']),
+        following: List<String>.from(map['following']),
+        bannerPic: map['banner_pic'] ?? '',
+        bio: map['bio'] ?? '',
+        isBlue: map['is_blue'] ?? false,
+        name: map['name'] ?? '',
+        email: map['email'] ?? '',
+
+        ///in app write uid gets saved as $id
+        uid: map['\$uid'] ?? '');
+  }
 }
