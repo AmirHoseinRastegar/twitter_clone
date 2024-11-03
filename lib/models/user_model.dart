@@ -74,6 +74,6 @@ class UserModel {
         email: map['email'] ?? '',
 
         ///in app write uid gets saved as $id
-        uid: map['\$uid'] ?? '');
+        uid: map['\$id'] ?? '');
   }
 }

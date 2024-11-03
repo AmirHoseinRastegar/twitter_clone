@@ -23,6 +23,17 @@ final futureSessionProvider = FutureProvider((ref) {
   final authSessionController = ref.watch(authControllerProvider.notifier);
   return authSessionController.currentUser();
 });
+final userDetailProvider = FutureProvider((ref) {
+  final authSessionController = ref.watch(futureSessionProvider).value!.$id;
+  final userDetail =
+      ref.watch(currentUserAccountProvider(authSessionController));
+  return userDetail.value;
+});
+
+final currentUserAccountProvider = FutureProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid: uid);
+});
 
 class AuthController extends StateNotifier<bool> {
   final AuthApi _authApi;
@@ -51,7 +62,7 @@ class AuthController extends StateNotifier<bool> {
         UserModel userModel = UserModel(
           email: email,
           name: email.split('@')[0],
-          uid: '',
+          uid: r.$id,
           profilePic: '',
           bannerPic: '',
           bio: '',
@@ -84,8 +95,14 @@ class AuthController extends StateNotifier<bool> {
       snackBar(context, l.message);
     }, (r) {
       snackBar(context, 'logged in');
-      Navigator.push(context, HomeScreen.rout());
+      Navigator.push(context, HomeView.rout());
     });
     state = false;
+  }
+
+  Future<UserModel> getUserData({required String uid}) async {
+    final result = await _userApi.getUserData(uid: uid);
+    final data = UserModel.fromMap(result.data);
+    return data;
   }
 }

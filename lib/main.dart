@@ -27,7 +27,7 @@ class MyApp extends ConsumerWidget {
         theme: AppTheme.theme,
         home: ref.watch(futureSessionProvider).when(data: (user) {
           if (user != null) {
-            return const HomeScreen();
+            return const HomeView();
           }
           return const LoginView();
         }, error: (error, str) {

@@ -5,12 +5,20 @@ import 'package:twitter_clone/theme/colors_pallet.dart';
 import 'constants.dart';
 
 class UIConstants {
-
-  static AppBar appBar(){
+  static AppBar appBar() {
     return AppBar(
       centerTitle: true,
-      title: SvgPicture.asset(AssetsConstants.twitterLogo,color: ColorsPallet.blueColor,width: 35,),
+      title: SvgPicture.asset(
+        AssetsConstants.twitterLogo,
+        color: ColorsPallet.blueColor,
+        width: 35,
+      ),
     );
   }
 
+  static List<Widget> bottomItems = <Widget>[
+    const Text('feed'),
+    const Text('search'),
+    const Text('notification'),
+  ];
 }

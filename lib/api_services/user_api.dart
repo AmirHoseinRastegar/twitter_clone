@@ -1,4 +1,5 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:twitter_clone/core/core.dart';
@@ -12,6 +13,8 @@ final userApiProvider = Provider((ref) {
 
 abstract class UserApi {
   FutureEitherVoid saveUserData({required UserModel userModel});
+
+  Future<Document> getUserData({required String uid});
 }
 
 class UserApiImpl implements UserApi {
@@ -25,7 +28,7 @@ class UserApiImpl implements UserApi {
       await _databases.createDocument(
         databaseId: AppWriteConstants.databaseId,
         collectionId: AppWriteConstants.userCollectionId,
-        documentId: ID.unique(),
+        documentId: userModel.uid,
         data: userModel.toMap(),
       );
       return right(null);
@@ -41,5 +44,14 @@ class UserApiImpl implements UserApi {
         ),
       );
     }
+  }
+
+  @override
+  Future<Document> getUserData({required String uid}) {
+    return _databases.getDocument(
+      databaseId: AppWriteConstants.databaseId,
+      collectionId: AppWriteConstants.userCollectionId,
+      documentId: uid,
+    );
   }
 }

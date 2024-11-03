@@ -23,6 +23,7 @@ class RoundedButton extends StatelessWidget {
       child: Chip(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: Colors.transparent),
         ),
         label: Text(
           label,
