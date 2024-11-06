@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:twitter_clone/common/utils.dart';
 import 'package:twitter_clone/constants/assets_constants.dart';
 import 'package:twitter_clone/theme/colors_pallet.dart';
 
@@ -18,6 +22,13 @@ class AddTweetView extends ConsumerStatefulWidget {
 }
 
 class _AddTweetViewState extends ConsumerState<AddTweetView> {
+  List<File> images = [];
+
+  void pickImage() async {
+    images = await pickImages();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUserData = ref.watch(userDetailProvider).value;
@@ -71,6 +82,20 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 50,),
+                    if (images.isNotEmpty)
+                      CarouselSlider(
+                        items: images.map((e) {
+                          return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Image.file(e));
+                        }).toList(),
+                        options: CarouselOptions(
+                          height: 300,
+                          enableInfiniteScroll: false,
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -85,9 +110,12 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8).copyWith(left: 15, right: 15),
-                child: SvgPicture.asset(
-                  AssetsConstants.galleryIcon,
-                  color: ColorsPallet.blueColor,
+                child: InkWell(
+                  onTap: pickImage,
+                  child: SvgPicture.asset(
+                    AssetsConstants.galleryIcon,
+                    color: ColorsPallet.blueColor,
+                  ),
                 ),
               ),
               Padding(
@@ -97,7 +125,6 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
                   color: ColorsPallet.blueColor,
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8).copyWith(left: 15, right: 15),
                 child: SvgPicture.asset(
