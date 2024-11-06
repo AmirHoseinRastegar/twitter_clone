@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:twitter_clone/constants/assets_constants.dart';
 import 'package:twitter_clone/theme/colors_pallet.dart';
 
 import '../../../common/common.dart';
@@ -58,7 +60,7 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
                           child: TextField(
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Whats up?',
+                              hintText: 'What\'s up?',
                               hintStyle: TextStyle(
                                   color: ColorsPallet.greyColor,
                                   fontSize: 20,
@@ -68,10 +70,44 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(
+                    width: 1, color: ColorsPallet.greyColor.withOpacity(0.5))),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8).copyWith(left: 15, right: 15),
+                child: SvgPicture.asset(
+                  AssetsConstants.galleryIcon,
+                  color: ColorsPallet.blueColor,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8).copyWith(left: 15, right: 15),
+                child: SvgPicture.asset(
+                  AssetsConstants.gifIcon,
+                  color: ColorsPallet.blueColor,
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8).copyWith(left: 15, right: 15),
+                child: SvgPicture.asset(
+                  AssetsConstants.emojiIcon,
+                  color: ColorsPallet.blueColor,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
