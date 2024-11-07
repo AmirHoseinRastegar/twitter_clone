@@ -10,6 +10,7 @@ import 'package:twitter_clone/theme/colors_pallet.dart';
 
 import '../../../common/common.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../controller/tweet_controller.dart';
 
 class AddTweetView extends ConsumerStatefulWidget {
   static route() =>
@@ -22,6 +23,7 @@ class AddTweetView extends ConsumerStatefulWidget {
 }
 
 class _AddTweetViewState extends ConsumerState<AddTweetView> {
+  final TextEditingController _tweetTextController = TextEditingController();
   List<File> images = [];
 
   void pickImage() async {
@@ -29,9 +31,18 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
     setState(() {});
   }
 
+  void shareTweet() {
+    ref.read(tweetControllerProvider.notifier).shareTweet(
+          images: images,
+          text: _tweetTextController.text,
+          context: context,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUserData = ref.watch(userDetailProvider).value;
+    final isLoading = ref.watch(tweetControllerProvider);
     print(currentUserData?.profilePic);
 
     return Padding(
@@ -46,13 +57,13 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
           actions: [
             RoundedButton(
               label: 'Tweet',
-              onTap: () {},
+              onTap: shareTweet,
               backgroundColor: Colors.blue,
               textColor: Colors.white,
             ),
           ],
         ),
-        body: currentUserData == null
+        body:isLoading || currentUserData == null
             ? const ErrorLandingPage(errorMessage: 'please login first')
             : SingleChildScrollView(
                 child: Column(
@@ -67,9 +78,10 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
                         const SizedBox(
                           width: 15,
                         ),
-                        const Expanded(
+                         Expanded(
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: _tweetTextController,
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'What\'s up?',
                               hintStyle: TextStyle(
@@ -82,13 +94,16 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 50,),
+                    const SizedBox(
+                      height: 50,
+                    ),
                     if (images.isNotEmpty)
                       CarouselSlider(
                         items: images.map((e) {
                           return Container(
                               width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
                               child: Image.file(e));
                         }).toList(),
                         options: CarouselOptions(
