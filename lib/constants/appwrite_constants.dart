@@ -4,4 +4,5 @@ class AppWriteConstants {
   static String endpoint = "http://192.168.100.4:80/v1";
   static String userCollectionId = "6726799e00068cab1b04";
   static String tweetCollectionId = "672d0989000ef6afcd9f";
+  static String tweetBucket = "672dd6340037c540ea85";
 }
