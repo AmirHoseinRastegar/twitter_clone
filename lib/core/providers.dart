@@ -9,13 +9,16 @@ final appWriteClientProvider = Provider((ref) {
       .setProject(AppWriteConstants.projectId)
       .setSelfSigned(status: true);
 });
- final appWriteAccountProvider=Provider((ref) {
-   final client= ref.watch(appWriteClientProvider);
-   return Account(client);
- });
+final appWriteAccountProvider = Provider((ref) {
+  final client = ref.watch(appWriteClientProvider);
+  return Account(client);
+});
 
-
- final appWriteDatabaseProvider=Provider((ref) {
-   final client= ref.watch(appWriteClientProvider);
-   return Databases(client);
- });
+final appWriteDatabaseProvider = Provider((ref) {
+  final client = ref.watch(appWriteClientProvider);
+  return Databases(client);
+});
+final appStorageProvider = Provider((ref) {
+  final client = ref.watch(appWriteClientProvider);
+  return Storage(client);
+});
