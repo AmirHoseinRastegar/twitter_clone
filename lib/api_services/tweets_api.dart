@@ -6,7 +6,6 @@ import 'package:twitter_clone/constants/appwrite_constants.dart';
 import 'package:twitter_clone/core/core.dart';
 import 'package:twitter_clone/models/tweet_model.dart';
 
-
 final tweetsApiProvider = Provider((ref) {
   final databases = ref.watch(appWriteDatabaseProvider);
   return TweetsApiImpl(databases: databases);
@@ -15,6 +14,8 @@ final tweetsApiProvider = Provider((ref) {
 
 abstract class TweetsApi {
   FutureEither<Document> shareTweet(TweetModel tweetModel);
+
+  Future<List<Document>> getTweets();
 }
 
 class TweetsApiImpl implements TweetsApi {
@@ -28,7 +29,7 @@ class TweetsApiImpl implements TweetsApi {
       final res = await _databases.createDocument(
         databaseId: AppWriteConstants.databaseId,
         collectionId: AppWriteConstants.tweetCollectionId,
-        documentId:ID.unique(),
+        documentId: ID.unique(),
         data: tweetModel.toJson(),
       );
       return right(res);
@@ -37,5 +38,14 @@ class TweetsApiImpl implements TweetsApi {
     } catch (e, str) {
       return left(Failure(e.toString(), str));
     }
+  }
+
+  @override
+  Future<List<Document>> getTweets() async {
+    final documents = await _databases.listDocuments(
+      databaseId: AppWriteConstants.databaseId,
+      collectionId: AppWriteConstants.tweetCollectionId,
+    );
+    return documents.documents;
   }
 }

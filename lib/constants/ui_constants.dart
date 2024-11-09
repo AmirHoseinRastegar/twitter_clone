@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:twitter_clone/theme/colors_pallet.dart';
 
+import '../feature/tweets/widgets/tweets_display.dart';
 import 'constants.dart';
 
 class UIConstants {
@@ -17,7 +18,7 @@ class UIConstants {
   }
 
   static List<Widget> bottomItems = <Widget>[
-    const Text('feed'),
+    const TweetsDisplay(),
     const Text('search'),
     const Text('notification'),
   ];
