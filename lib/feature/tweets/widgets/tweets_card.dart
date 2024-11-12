@@ -24,8 +24,11 @@ class TweetsCard extends ConsumerWidget {
                     Container(
                       margin: const EdgeInsets.all(15),
                       child: CircleAvatar(
+                        onBackgroundImageError: (exception, stackTrace) => const Center(
+                          child: Icon(Icons.error),
+                        ),
                         radius: 35,
-                        backgroundImage: NetworkImage(data.profilePic),
+                        backgroundImage: NetworkImage(data.profilePic,),
                       ),
                     ),
                     Column(

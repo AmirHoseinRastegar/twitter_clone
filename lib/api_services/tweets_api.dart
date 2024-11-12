@@ -1,5 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:appwrite/realtime_io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:twitter_clone/constants/appwrite_constants.dart';
@@ -8,20 +9,26 @@ import 'package:twitter_clone/models/tweet_model.dart';
 
 final tweetsApiProvider = Provider((ref) {
   final databases = ref.watch(appWriteDatabaseProvider);
-  return TweetsApiImpl(databases: databases);
+  final realtime = ref.watch(appRealTimeProvider);
+  return TweetsApiImpl(databases: databases, realtime: realtime);
 });
-
 
 abstract class TweetsApi {
   FutureEither<Document> shareTweet(TweetModel tweetModel);
 
   Future<List<Document>> getTweets();
+
+  /// this realtime uses socket
+  Stream<RealtimeMessage> getLatestTweets();
 }
 
 class TweetsApiImpl implements TweetsApi {
   final Databases _databases;
+  final Realtime _realtime;
 
-  TweetsApiImpl({required Databases databases}) : _databases = databases;
+  TweetsApiImpl({required Databases databases, required Realtime realtime})
+      : _realtime = realtime,
+        _databases = databases;
 
   @override
   FutureEither<Document> shareTweet(TweetModel tweetModel) async {
@@ -47,5 +54,12 @@ class TweetsApiImpl implements TweetsApi {
       collectionId: AppWriteConstants.tweetCollectionId,
     );
     return documents.documents;
+  }
+
+  @override
+  Stream<RealtimeMessage> getLatestTweets() {
+    return _realtime.subscribe([
+      'database.${AppWriteConstants.databaseId}.collection.${AppWriteConstants.tweetCollectionId}.documents'
+    ]).stream;
   }
 }
