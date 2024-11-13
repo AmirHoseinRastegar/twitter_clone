@@ -17,6 +17,7 @@ class _TweetsDisplayState extends ConsumerState<TweetsDisplay> {
     return ref.watch(getTweetsFutureProvider).when(
           data: (data) {
             return ListView.builder(
+              padding: const EdgeInsets.only(top: 10,),
               itemCount: data.length,
               itemBuilder: (context, index) {
                 final tweetModel = data[index];
@@ -29,7 +30,7 @@ class _TweetsDisplayState extends ConsumerState<TweetsDisplay> {
               errorMessage: error.toString(),
             );
           },
-          loading: () => Loader(),
+          loading: () => Container(),
         );
   }
 }
