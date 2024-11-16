@@ -7,10 +7,6 @@ class AppWriteConstants {
   static String tweetBucket = "672dd6340037c540ea85";
 
   static String imageLinkGetter(String imageUrl) {
-    print("Endpoint: $endpoint");
-    print("Bucket ID: $tweetBucket");
-    print("Image URL: $imageUrl");
-    print("Full Link: $endpoint/storage/buckets/$tweetBucket/files/$imageUrl/view?project=$projectId&mode=admin");
-    return "$endpoint/storage/buckets/$tweetBucket/files/$imageUrl/view?project=$projectId&mode=admin";
+    return "$endpoint/storage/buckets/$tweetBucket/files/$imageUrl/view?project=$projectId&project=$projectId&mode=admin";
   }
 }

@@ -1,15 +1,18 @@
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_clone/constants/constants.dart';
 import 'package:twitter_clone/feature/auth/controller/auth_controller.dart';
 import 'package:twitter_clone/feature/tweets/widgets/hashtags_links.dart';
+import 'package:twitter_clone/feature/tweets/widgets/tweet_statuses.dart';
 import 'package:twitter_clone/models/tweet_model.dart';
 import 'package:twitter_clone/theme/colors_pallet.dart';
+import 'package:twitter_clone/theme/theme.dart';
 
 import '../../../common/error.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../constants/appwrite_constants.dart';
 import '../../../core/tweet_type_enum.dart';
 import 'carousel_slider.dart';
 
@@ -20,26 +23,26 @@ class TweetsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(tweetModel.imageLinks);
-    print(AppWriteConstants.endpoint);
     return ref.watch(currentUserAccountProvider(tweetModel.uid)).when(
           data: (data) {
             return Container(
-              padding:  const EdgeInsets.only(top: 12,bottom: 12),
+              padding: const EdgeInsets.only(top: 12, bottom: 12),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: const EdgeInsets.all(15),
+                        margin:
+                            const EdgeInsets.only(right: 12, top: 0, left: 0),
                         child: CircleAvatar(
                           onBackgroundImageError: (exception, stackTrace) =>
                               const Center(
                             child: Icon(Icons.error),
                           ),
-                          radius: 35,
+                          radius: 25,
                           backgroundImage: NetworkImage(
                             data.profilePic,
                           ),
@@ -72,16 +75,61 @@ class TweetsCard extends ConsumerWidget {
                               height: 3,
                             ),
                             HashtagsAndLinks(text: tweetModel.text),
-                            if(tweetModel.tweetType == TweetType.image)
-                              CrouselTweetImages(imageLinks: tweetModel.imageLinks),
-
+                            if (tweetModel.tweetType == TweetType.image)
+                              CrouselTweetImages(
+                                  imageLinks: tweetModel.imageLinks),
+                            if (tweetModel.likes.isNotEmpty) ...[
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              // AnyLinkPreview(
+                              //     link: 'https://${tweetModel.link}'),
+                            ],
+                            Container(
+                              margin: const EdgeInsets.only(top: 10, right: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TweetStatuses(
+                                      pathName: AssetsConstants.viewsIcon,
+                                      onTap: () {},
+                                      text: (tweetModel.likes.length +
+                                              tweetModel.commentIds.length +
+                                              tweetModel.retweetCount)
+                                          .toString()),
+                                  TweetStatuses(
+                                      pathName: AssetsConstants.commentIcon,
+                                      onTap: () {},
+                                      text: tweetModel.commentIds.length
+                                          .toString()),
+                                  TweetStatuses(
+                                    pathName: AssetsConstants.retweetIcon,
+                                    onTap: () {},
+                                    text: tweetModel.retweetCount.toString(),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.share_outlined,
+                                      size: 27,
+                                      color: ColorsPallet.greyColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  const Divider(height: 0.2, thickness: 0.3, color: ColorsPallet.greyColor),
+                  const Divider(
+                      height: 0.2,
+                      thickness: 0.3,
+                      color: ColorsPallet.greyColor),
                 ],
               ),
             );

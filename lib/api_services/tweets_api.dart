@@ -50,9 +50,15 @@ class TweetsApiImpl implements TweetsApi {
   @override
   Future<List<Document>> getTweets() async {
     final documents = await _databases.listDocuments(
-      databaseId: AppWriteConstants.databaseId,
-      collectionId: AppWriteConstants.tweetCollectionId,
-    );
+        databaseId: AppWriteConstants.databaseId,
+        collectionId: AppWriteConstants.tweetCollectionId,
+
+        /// this is for getting latest tweets in the list of tweets in top of the screen
+        queries: [
+          ///for making it in descending order we need to add in in indexes section of our database adn make it
+          /// as descending order in tweetedAt format so we set tweets according to tweetedAt
+          Query.orderDesc('tweetedAt'),
+        ]);
     return documents.documents;
   }
 
