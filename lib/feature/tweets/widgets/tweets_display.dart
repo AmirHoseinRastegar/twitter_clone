@@ -22,10 +22,10 @@ class _TweetsDisplayState extends ConsumerState<TweetsDisplay> {
             return ref.watch(getLatestTweetProvider).when(
                   data: (data) {
                     if (data.events.contains(
-                        'database.*.collection.${AppWriteConstants.tweetCollectionId}.documents.*.create')) {
+                        'databases.*.collections.${AppWriteConstants.tweetCollectionId}.documents.*.create')) {
                       ///0 means latest tweet be shown in top of the list not in bottom of it
                       ///but its not enough for it we need to do some work in tweets api file in list of tweets  function
-                      tweets.insert(0, data.payload as TweetModel);
+                      tweets.insert(0, TweetModel.fromJson(data.payload));
                     }
                     return ListView.builder(
                       padding: const EdgeInsets.only(

@@ -65,7 +65,7 @@ class TweetsApiImpl implements TweetsApi {
   @override
   Stream<RealtimeMessage> getLatestTweets() {
     return _realtime.subscribe([
-      'database.${AppWriteConstants.databaseId}.collection.${AppWriteConstants.tweetCollectionId}.documents'
+      'databases.${AppWriteConstants.databaseId}.collections.${AppWriteConstants.tweetCollectionId}.documents'
     ]).stream;
   }
 }

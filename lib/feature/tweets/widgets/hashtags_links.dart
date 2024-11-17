@@ -27,9 +27,7 @@ class HashtagsAndLinks extends StatelessWidget {
         textSpansList.add(
           TextSpan(
             text: '$element ',
-            style: const TextStyle(
-                color: ColorsPallet.blueColor,
-                fontSize: 18),
+            style: const TextStyle(color: ColorsPallet.blueColor, fontSize: 18),
           ),
         );
       } else {

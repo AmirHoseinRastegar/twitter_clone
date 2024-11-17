@@ -1,6 +1,7 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_clone/constants/constants.dart';
 import 'package:twitter_clone/feature/auth/controller/auth_controller.dart';
@@ -74,7 +75,9 @@ class TweetsCard extends ConsumerWidget {
                             const SizedBox(
                               height: 3,
                             ),
-                            HashtagsAndLinks(text: tweetModel.text),
+                            Container(
+                                alignment: Alignment.topLeft,
+                                child: HashtagsAndLinks(text: tweetModel.text)),
                             if (tweetModel.tweetType == TweetType.image)
                               CrouselTweetImages(
                                   imageLinks: tweetModel.imageLinks),

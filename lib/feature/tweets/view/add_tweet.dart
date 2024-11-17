@@ -37,6 +37,7 @@ class _AddTweetViewState extends ConsumerState<AddTweetView> {
           text: _tweetTextController.text,
           context: context,
         );
+    Navigator.pop(context);
   }
 
   @override
