@@ -18,8 +18,10 @@ class TweetModel {
   final String id;
   final TweetType tweetType;
   final int retweetCount;
+  final String retweetedBy;
 
   const TweetModel({
+    required this.retweetedBy,
     required this.text,
     required this.uid,
     required this.link,
@@ -45,8 +47,10 @@ class TweetModel {
     String? id,
     TweetType? type,
     int? retweetCount,
+    String? retweetedBy,
   }) {
     return TweetModel(
+      retweetedBy:  retweetedBy ?? this.retweetedBy,
       text: text ?? this.text,
       uid: uid ?? this.uid,
       link: link ?? this.link,
@@ -63,7 +67,8 @@ class TweetModel {
 
   factory TweetModel.fromJson(Map<String, dynamic> json) {
     return TweetModel(
-      text: json['text'] ,
+      retweetedBy:  json['retweetedBy'] ?? '',
+      text: json['text'],
       uid: json['uid'] ?? '',
       link: json['link'] ?? '',
       hashtags: List<String>.from(json['hashtags']),
@@ -80,6 +85,7 @@ class TweetModel {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data.addAll({'text': text});
+    data.addAll({'retweetedBy': retweetedBy});
     data.addAll({'uid': uid});
     data.addAll({'link': link});
     data.addAll({'hashtags': hashtags});

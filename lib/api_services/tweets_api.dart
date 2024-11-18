@@ -20,6 +20,10 @@ abstract class TweetsApi {
 
   /// this realtime uses socket
   Stream<RealtimeMessage> getLatestTweets();
+
+  FutureEither<Document> likeTweet(TweetModel tweetModel);
+
+  FutureEither<Document> retweetsCount(TweetModel tweetModel);
 }
 
 class TweetsApiImpl implements TweetsApi {
@@ -67,5 +71,41 @@ class TweetsApiImpl implements TweetsApi {
     return _realtime.subscribe([
       'databases.${AppWriteConstants.databaseId}.collections.${AppWriteConstants.tweetCollectionId}.documents'
     ]).stream;
+  }
+
+  @override
+  FutureEither<Document> likeTweet(TweetModel tweetModel) async {
+    try {
+      final res = await _databases.updateDocument(
+          databaseId: AppWriteConstants.databaseId,
+          collectionId: AppWriteConstants.tweetCollectionId,
+          documentId: tweetModel.id,
+          data: {
+            'likes': tweetModel.likes,
+          });
+      return right(res);
+    } on AppwriteException catch (e, str) {
+      return left(Failure(e.message ?? 'Something went wrong', str));
+    } catch (e, str) {
+      return left(Failure(e.toString(), str));
+    }
+  }
+
+  @override
+  FutureEither<Document> retweetsCount(TweetModel tweetModel) async {
+    try {
+      final res = await _databases.updateDocument(
+          databaseId: AppWriteConstants.databaseId,
+          collectionId: AppWriteConstants.tweetCollectionId,
+          documentId: tweetModel.id,
+          data: {
+            'retweetedBy': tweetModel.retweetedBy,
+          });
+      return right(res);
+    } on AppwriteException catch (e, str) {
+      return left(Failure(e.message ?? 'Something went wrong', str));
+    } catch (e, str) {
+      return left(Failure(e.toString(), str));
+    }
   }
 }

@@ -8,6 +8,7 @@ import 'package:twitter_clone/api_services/storage_api.dart';
 import 'package:twitter_clone/api_services/tweets_api.dart';
 import 'package:twitter_clone/core/tweet_type_enum.dart';
 import 'package:twitter_clone/models/tweet_model.dart';
+import 'package:twitter_clone/models/user_model.dart';
 
 import '../../../common/utils.dart';
 import '../../auth/controller/auth_controller.dart';
@@ -51,6 +52,50 @@ class TweetController extends StateNotifier<bool> {
         .toList();
   }
 
+  Future<void> likeTweet(TweetModel tweetModel, UserModel userModel) async {
+    List<String> likes = tweetModel.likes;
+    if (likes.contains(userModel.uid)) {
+      likes.remove(userModel.uid);
+    } else {
+      likes.add(userModel.uid);
+    }
+    tweetModel = tweetModel.copyWith(likes: likes);
+    final res = await _tweetsApi.likeTweet(tweetModel);
+    res.fold((l) => null, (r) => null);
+  }
+
+  void retweetsCount(
+    TweetModel tweetModel,
+    UserModel user,
+    BuildContext context,
+  ) async {
+    tweetModel = tweetModel.copyWith(
+      retweetedBy: user.name,
+
+      ///we make like and comments empty because a retweeted tweet will not have any likes or comments
+      ///by itself
+      likes: [],
+      commentIds: [],
+      retweetCount: tweetModel.retweetCount + 1,
+    );
+
+    final res = await _tweetsApi.retweetsCount(tweetModel);
+    res.fold(
+      (l) => snackBar(context, l.message),
+      (r) async {
+        tweetModel = tweetModel.copyWith(
+          ///since we making a new tweet by retweeting a tweet it needs a new unique id
+          ///and retweet count should be 0 in that case
+          id: ID.unique(),
+          retweetCount: 0,
+        );
+        final res2 = await _tweetsApi.shareTweet(tweetModel);
+        res2.fold((l) => snackBar(context, l.message),
+            (r) => snackBar(context, 'Retweeted'));
+      },
+    );
+  }
+
   void shareTweet({
     required List<File> images,
     required String text,
@@ -83,7 +128,8 @@ class TweetController extends StateNotifier<bool> {
         tweetedAt: DateTime.now(),
         id: ID.unique(),
         tweetType: TweetType.text,
-        retweetCount: 0);
+        retweetCount: 0,
+        retweetedBy: '');
     final result = await _tweetsApi.shareTweet(tweetModel);
     result.fold((l) => snackBar(context, l.message), (r) => null);
     state = false;
@@ -111,7 +157,8 @@ class TweetController extends StateNotifier<bool> {
         tweetedAt: DateTime.now(),
         id: ID.unique(),
         tweetType: TweetType.image,
-        retweetCount: 0);
+        retweetCount: 0,
+        retweetedBy: '');
     final result = await _tweetsApi.shareTweet(tweetModel);
     result.fold((l) => snackBar(context, l.message), (r) => null);
     state = false;
