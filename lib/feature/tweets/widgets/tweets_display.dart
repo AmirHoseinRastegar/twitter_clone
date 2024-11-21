@@ -26,6 +26,24 @@ class _TweetsDisplayState extends ConsumerState<TweetsDisplay> {
                       ///0 means latest tweet be shown in top of the list not in bottom of it
                       ///but its not enough for it we need to do some work in tweets api file in list of tweets  function
                       tweets.insert(0, TweetModel.fromJson(data.payload));
+                    } else if (data.events.contains(
+                      ///update is for updating tweet statuses in realtime like retweets
+                        'databases.*.collections.${AppWriteConstants.tweetCollectionId}.documents.*.update')) {
+                      ///by printing this we realize that tweet id for retweet count updating logic
+                      ///comes between 'document.    .update' so we need middle part of it which is the id of the original tweet
+                        print(data.events[0]);
+                        final startingPoint= data.events[0].lastIndexOf('documents.');
+                        final endPoint= data.events[0].lastIndexOf('.update');
+                        ///the +10 is for ignoring documents. which is 10 digits long
+                        final tweetId= data.events[0].substring(startingPoint+10, endPoint);
+                        var tweet= tweets.where((element) =>element.id==tweetId).first;
+                        ///first we get index of tweet
+                      final  tweetIndex= tweets.indexOf(tweet);
+                      ///then we remove it to replace new data
+                      tweets.removeWhere((element) => element.id==tweetId);
+                      tweet= TweetModel.fromJson(data.payload);
+                      tweets.insert(tweetIndex, tweet);
+
                     }
                     return ListView.builder(
                       padding: const EdgeInsets.only(

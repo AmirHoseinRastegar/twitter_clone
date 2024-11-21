@@ -36,16 +36,39 @@ class TweetsCard extends ConsumerWidget {
             return currentUser == null
                 ? Container()
                 : GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                ReplyScreen.route(tweetModel),
-              ),
-                  child: Container(
+                    onTap: () => Navigator.push(
+                      context,
+                      ReplyScreen.route(tweetModel),
+                    ),
+                    child: Container(
                       padding: const EdgeInsets.only(top: 12, bottom: 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          if (tweetModel.retweetedBy.isNotEmpty)
+                            Row(
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  AssetsConstants.retweetIcon,
+                                  color: ColorsPallet.greyColor,
+                                  height: 20,
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                 Text(
+                                  '${tweetModel.retweetedBy} retweeted',
+                                  style:const TextStyle(
+                                    color: ColorsPallet.greyColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
+                            ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -57,7 +80,7 @@ class TweetsCard extends ConsumerWidget {
                                       (exception, stackTrace) => const Center(
                                     child: Icon(Icons.error),
                                   ),
-                                  radius: 25,
+                                  radius: 20,
                                   backgroundImage: NetworkImage(
                                     data.profilePic,
                                   ),
@@ -70,7 +93,8 @@ class TweetsCard extends ConsumerWidget {
                                     Row(
                                       children: [
                                         Container(
-                                          margin: const EdgeInsets.only(right: 7),
+                                          margin:
+                                              const EdgeInsets.only(right: 7),
                                           child: Text(
                                             data.name,
                                             style: const TextStyle(
@@ -113,7 +137,8 @@ class TweetsCard extends ConsumerWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           TweetStatuses(
-                                              pathName: AssetsConstants.viewsIcon,
+                                              pathName:
+                                                  AssetsConstants.viewsIcon,
                                               onTap: () {},
                                               text: (tweetModel.likes.length +
                                                       tweetModel
@@ -139,20 +164,22 @@ class TweetsCard extends ConsumerWidget {
                                                   : SvgPicture.asset(
                                                       AssetsConstants
                                                           .likeOutlinedIcon,
-                                                      color:
-                                                          ColorsPallet.greyColor,
+                                                      color: ColorsPallet
+                                                          .greyColor,
                                                     );
                                             },
                                             isLiked: tweetModel.likes
                                                 .contains(currentUser.uid),
                                             likeCount: tweetModel.likes.length,
-                                            countBuilder: (count, isLiked, text) {
+                                            countBuilder:
+                                                (count, isLiked, text) {
                                               return Text(
                                                 text,
                                                 style: TextStyle(
                                                     color: isLiked
                                                         ? ColorsPallet.redColor
-                                                        : ColorsPallet.greyColor,
+                                                        : ColorsPallet
+                                                            .greyColor,
                                                     fontSize: 16),
                                               );
                                             },
@@ -166,7 +193,8 @@ class TweetsCard extends ConsumerWidget {
                                             },
                                           ),
                                           TweetStatuses(
-                                            pathName: AssetsConstants.retweetIcon,
+                                            pathName:
+                                                AssetsConstants.retweetIcon,
                                             onTap: () {
                                               ref
                                                   .read(tweetControllerProvider
@@ -204,7 +232,7 @@ class TweetsCard extends ConsumerWidget {
                         ],
                       ),
                     ),
-                );
+                  );
           },
           error: (error, stackTrace) {
             return ErrorMessage(

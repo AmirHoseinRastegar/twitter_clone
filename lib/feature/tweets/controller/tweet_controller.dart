@@ -88,6 +88,8 @@ class TweetController extends StateNotifier<bool> {
           ///and retweet count should be 0 in that case
           id: ID.unique(),
           retweetCount: 0,
+          tweetedAt: DateTime.now(),
+
         );
         final res2 = await _tweetsApi.shareTweet(tweetModel);
         res2.fold((l) => snackBar(context, l.message),
