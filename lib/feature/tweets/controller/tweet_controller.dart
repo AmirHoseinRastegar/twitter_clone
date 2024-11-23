@@ -89,7 +89,6 @@ class TweetController extends StateNotifier<bool> {
           id: ID.unique(),
           retweetCount: 0,
           tweetedAt: DateTime.now(),
-
         );
         final res2 = await _tweetsApi.shareTweet(tweetModel);
         res2.fold((l) => snackBar(context, l.message),
@@ -102,17 +101,20 @@ class TweetController extends StateNotifier<bool> {
     required List<File> images,
     required String text,
     required BuildContext context,
+    required String repliedTo,
   }) {
     if (images.isNotEmpty) {
-      _imageContainedTweet(images: images, text: text, context: context);
+      _imageContainedTweet(
+          images: images, text: text, context: context, repliedTo: repliedTo);
     } else {
-      _textOnlyTweet(text: text, context: context);
+      _textOnlyTweet(text: text, context: context, repliedTo: repliedTo);
     }
   }
 
   Future<void> _textOnlyTweet({
     required String text,
     required BuildContext context,
+    required String repliedTo,
   }) async {
     state = true;
 
@@ -120,6 +122,7 @@ class TweetController extends StateNotifier<bool> {
     final hashtags = _getHashTagText(text);
     final userId = _ref.watch(userDetailProvider).value!;
     TweetModel tweetModel = TweetModel(
+        repliedTo: repliedTo,
         text: text,
         uid: userId.uid,
         link: link,
@@ -141,6 +144,7 @@ class TweetController extends StateNotifier<bool> {
     required List<File> images,
     required String text,
     required BuildContext context,
+    required String repliedTo,
   }) async {
     state = true;
 
@@ -149,6 +153,7 @@ class TweetController extends StateNotifier<bool> {
     final userId = _ref.watch(userDetailProvider).value!;
     final imageLinks = await _storageApi.uploadImages(images);
     TweetModel tweetModel = TweetModel(
+        repliedTo: repliedTo,
         text: text,
         uid: userId.uid,
         link: link,

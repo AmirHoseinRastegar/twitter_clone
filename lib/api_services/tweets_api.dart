@@ -99,7 +99,7 @@ class TweetsApiImpl implements TweetsApi {
           collectionId: AppWriteConstants.tweetCollectionId,
           documentId: tweetModel.id,
           data: {
-            'retweetedBy': tweetModel.retweetedBy,
+            'retweetCount': tweetModel.retweetCount,
           });
       return right(res);
     } on AppwriteException catch (e, str) {

@@ -19,6 +19,7 @@ class TweetModel {
   final TweetType tweetType;
   final int retweetCount;
   final String retweetedBy;
+  final String repliedTo;
 
   const TweetModel({
     required this.retweetedBy,
@@ -33,6 +34,7 @@ class TweetModel {
     required this.id,
     required this.tweetType,
     required this.retweetCount,
+    required this.repliedTo,
   });
 
   TweetModel copyWith({
@@ -48,6 +50,7 @@ class TweetModel {
     TweetType? type,
     int? retweetCount,
     String? retweetedBy,
+    String? repliedTo,
   }) {
     return TweetModel(
       retweetedBy:  retweetedBy ?? this.retweetedBy,
@@ -62,6 +65,7 @@ class TweetModel {
       id: id ?? this.id,
       tweetType: type ?? tweetType,
       retweetCount: retweetCount ?? this.retweetCount,
+      repliedTo: repliedTo ?? this.repliedTo,
     );
   }
 
@@ -79,6 +83,7 @@ class TweetModel {
       id: json['\$id'] ?? '',
       tweetType: (json['tweet_type'] as String).toEnum(),
       retweetCount: json['retweetCount']?.toInt() ?? 0,
+      repliedTo: json['repliedTo'] ?? '',
     );
   }
 
@@ -95,6 +100,7 @@ class TweetModel {
     data.addAll({'tweetedAt': tweetedAt.millisecondsSinceEpoch});
     data.addAll({'tweet_type': tweetType.type});
     data.addAll({'retweetCount': retweetCount});
+    data.addAll({'repliedTo': repliedTo});
     return data;
   }
 }

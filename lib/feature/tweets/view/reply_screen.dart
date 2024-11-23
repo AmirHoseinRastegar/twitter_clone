@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_clone/feature/tweets/controller/tweet_controller.dart';
 import 'package:twitter_clone/feature/tweets/widgets/tweets_card.dart';
 
 import '../../../models/tweet_model.dart';
@@ -21,17 +22,26 @@ class ReplyScreen extends ConsumerWidget {
           title: const Text('Tweet'),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              TweetsCard(tweetModel: tweetModel),
-            ],
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              children: [
+                TweetsCard(tweetModel: tweetModel),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: TextField(
           ///on submitted is same as controller kinda and does not need textEditingController
-          onSubmitted: (value) {},
+          onSubmitted: (value) {
+            ref.watch(tweetControllerProvider.notifier).shareTweet(
+              images: [],
+              text: value,
+              context: context,
+              repliedTo: tweetModel.id,
+            );
+          },
           decoration: const InputDecoration(
             hintText: ' your reply',
             contentPadding: EdgeInsets.all(20),
