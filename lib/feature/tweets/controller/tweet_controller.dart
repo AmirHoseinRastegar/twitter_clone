@@ -13,6 +13,11 @@ import 'package:twitter_clone/models/user_model.dart';
 import '../../../common/utils.dart';
 import '../../auth/controller/auth_controller.dart';
 
+final getRepliedTweetsProvider =
+    FutureProvider.family((ref, TweetModel tweetModel) {
+  final tweetsController = ref.watch(tweetControllerProvider.notifier);
+  return tweetsController.getRepliesOfTweet(tweetModel);
+});
 final tweetControllerProvider =
     StateNotifierProvider<TweetController, bool>((ref) {
   final tweetsApi = ref.watch(tweetsApiProvider);
@@ -109,6 +114,11 @@ class TweetController extends StateNotifier<bool> {
     } else {
       _textOnlyTweet(text: text, context: context, repliedTo: repliedTo);
     }
+  }
+
+  Future<List<TweetModel>> getRepliesOfTweet(TweetModel tweetModel) async {
+    final res = await _tweetsApi.getRepliesOfTweet(tweetModel);
+    return res.map((e) => TweetModel.fromJson(e.data)).toList();
   }
 
   Future<void> _textOnlyTweet({

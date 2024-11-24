@@ -24,6 +24,8 @@ abstract class TweetsApi {
   FutureEither<Document> likeTweet(TweetModel tweetModel);
 
   FutureEither<Document> retweetsCount(TweetModel tweetModel);
+
+  Future<List<Document>> getRepliesOfTweet(TweetModel tweetModel);
 }
 
 class TweetsApiImpl implements TweetsApi {
@@ -107,5 +109,17 @@ class TweetsApiImpl implements TweetsApi {
     } catch (e, str) {
       return left(Failure(e.toString(), str));
     }
+  }
+
+  @override
+  Future<List<Document>> getRepliesOfTweet(TweetModel tweetModel) async {
+    final res = await _databases.listDocuments(
+        databaseId: AppWriteConstants.databaseId,
+        collectionId: AppWriteConstants.tweetCollectionId,
+        queries: [
+          ///catch all replies of a particular tweet which its id matches replied to id
+          Query.equal('repliedTo', tweetModel.id),
+        ]);
+    return res.documents;
   }
 }
