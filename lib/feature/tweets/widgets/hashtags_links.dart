@@ -34,7 +34,7 @@ class HashtagsAndLinks extends StatelessWidget {
         textSpansList.add(
           TextSpan(
             text: '$element ',
-            style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 15),
+            style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
           ),
         );
       }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +58,9 @@ class TweetsCard extends ConsumerWidget {
                                 const SizedBox(
                                   width: 4,
                                 ),
-                                 Text(
+                                Text(
                                   '${tweetModel.retweetedBy} retweeted',
-                                  style:const TextStyle(
+                                  style: const TextStyle(
                                     color: ColorsPallet.greyColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -66,6 +68,7 @@ class TweetsCard extends ConsumerWidget {
                                 )
                               ],
                             ),
+
                           const SizedBox(
                             height: 10,
                           ),
@@ -89,6 +92,7 @@ class TweetsCard extends ConsumerWidget {
                               Expanded(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
@@ -113,6 +117,41 @@ class TweetsCard extends ConsumerWidget {
                                     const SizedBox(
                                       height: 3,
                                     ),
+                                    if (tweetModel.repliedTo.isNotEmpty)
+                                      ref
+                                          .watch(
+                                        getTweetByIdProvider(tweetModel.repliedTo),
+                                      )
+                                          .when(
+                                          data: (data) {
+                                            final replyingToUserName = ref.watch(
+                                                currentUserAccountProvider(data.uid)).value;
+                                            return RichText(
+                                              text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                      ///should use ? mark not ! because it may be null
+                                                      '@${replyingToUserName?.name} ',
+                                                      style: const TextStyle(
+                                                        color: ColorsPallet.blueColor,
+                                                        fontSize: 17,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  text: 'Replying to  ',
+                                                  style: const TextStyle(
+                                                    color: ColorsPallet.greyColor,
+                                                    fontSize: 15,
+                                                  )),
+                                            );
+                                          },
+                                          error: (error, stackTrace) => ErrorMessage(
+                                            errorMessage: error.toString(),
+                                          ),
+                                          loading: () => Container()),
+                                    const SizedBox(height: 3,),
                                     Container(
                                         alignment: Alignment.topLeft,
                                         child: HashtagsAndLinks(

@@ -26,6 +26,8 @@ abstract class TweetsApi {
   FutureEither<Document> retweetsCount(TweetModel tweetModel);
 
   Future<List<Document>> getRepliesOfTweet(TweetModel tweetModel);
+
+  Future<Document> getTweetById(String id);
 }
 
 class TweetsApiImpl implements TweetsApi {
@@ -61,6 +63,7 @@ class TweetsApiImpl implements TweetsApi {
 
         /// this is for getting latest tweets in the list of tweets in top of the screen
         queries: [
+
           ///for making it in descending order we need to add in in indexes section of our database adn make it
           /// as descending order in tweetedAt format so we set tweets according to tweetedAt
           Query.orderDesc('tweetedAt'),
@@ -70,9 +73,12 @@ class TweetsApiImpl implements TweetsApi {
 
   @override
   Stream<RealtimeMessage> getLatestTweets() {
-    return _realtime.subscribe([
-      'databases.${AppWriteConstants.databaseId}.collections.${AppWriteConstants.tweetCollectionId}.documents'
-    ]).stream;
+    return _realtime
+        .subscribe([
+      'databases.${AppWriteConstants.databaseId}.collections.${AppWriteConstants
+          .tweetCollectionId}.documents'
+    ])
+        .stream;
   }
 
   @override
@@ -117,9 +123,19 @@ class TweetsApiImpl implements TweetsApi {
         databaseId: AppWriteConstants.databaseId,
         collectionId: AppWriteConstants.tweetCollectionId,
         queries: [
+
           ///catch all replies of a particular tweet which its id matches replied to id
           Query.equal('repliedTo', tweetModel.id),
         ]);
     return res.documents;
+  }
+
+  @override
+  Future<Document> getTweetById(String id) async {
+    final res = await _databases.getDocument(
+        databaseId: AppWriteConstants.databaseId,
+        collectionId:  AppWriteConstants.tweetCollectionId,
+        documentId: id);
+    return res;
   }
 }

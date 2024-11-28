@@ -31,6 +31,11 @@ final getTweetsFutureProvider = FutureProvider.autoDispose((ref) {
   return tweetsController.getTweets();
 });
 
+final getTweetByIdProvider = FutureProvider.family((ref, String id) {
+  final tweetController = ref.watch(tweetControllerProvider.notifier);
+  return tweetController.getTweetById(id);
+});
+
 final getLatestTweetProvider = StreamProvider.autoDispose((ref) {
   final tweetAPI = ref.watch(tweetsApiProvider);
   return tweetAPI.getLatestTweets();
@@ -67,6 +72,11 @@ class TweetController extends StateNotifier<bool> {
     tweetModel = tweetModel.copyWith(likes: likes);
     final res = await _tweetsApi.likeTweet(tweetModel);
     res.fold((l) => null, (r) => null);
+  }
+
+  Future<TweetModel> getTweetById(String id) async {
+    final tweet = await _tweetsApi.getTweetById(id);
+    return TweetModel.fromJson(tweet.data);
   }
 
   void retweetsCount(
