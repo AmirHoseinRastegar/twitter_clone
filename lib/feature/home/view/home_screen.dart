@@ -45,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         child: const Icon(Icons.add),
       ),
-      appBar: UIConstants.appBar(),
+      appBar:_page==0? UIConstants.appBar():null,
       bottomNavigationBar: CupertinoTabBar(
         currentIndex: _page,
         onTap: onPageChanged,
