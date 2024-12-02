@@ -15,6 +15,8 @@ abstract class UserApi {
   FutureEitherVoid saveUserData({required UserModel userModel});
 
   Future<Document> getUserData({required String uid});
+
+  Future<List<Document>> searchUserByName({required String name});
 }
 
 class UserApiImpl implements UserApi {
@@ -53,5 +55,17 @@ class UserApiImpl implements UserApi {
       collectionId: AppWriteConstants.userCollectionId,
       documentId: uid,
     );
+  }
+
+  @override
+  Future<List<Document>> searchUserByName({required String name}) async {
+    final docs = await _databases.listDocuments(
+      databaseId: AppWriteConstants.databaseId,
+      collectionId: AppWriteConstants.userCollectionId,
+      queries: [
+        Query.search('name', name),
+      ],
+    );
+    return docs.documents;
   }
 }
