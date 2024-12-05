@@ -28,6 +28,8 @@ abstract class TweetsApi {
   Future<List<Document>> getRepliesOfTweet(TweetModel tweetModel);
 
   Future<Document> getTweetById(String id);
+
+  Future<List<Document>> getUserProfileTweets(String uid);
 }
 
 class TweetsApiImpl implements TweetsApi {
@@ -63,7 +65,6 @@ class TweetsApiImpl implements TweetsApi {
 
         /// this is for getting latest tweets in the list of tweets in top of the screen
         queries: [
-
           ///for making it in descending order we need to add in in indexes section of our database adn make it
           /// as descending order in tweetedAt format so we set tweets according to tweetedAt
           Query.orderDesc('tweetedAt'),
@@ -73,12 +74,9 @@ class TweetsApiImpl implements TweetsApi {
 
   @override
   Stream<RealtimeMessage> getLatestTweets() {
-    return _realtime
-        .subscribe([
-      'databases.${AppWriteConstants.databaseId}.collections.${AppWriteConstants
-          .tweetCollectionId}.documents'
-    ])
-        .stream;
+    return _realtime.subscribe([
+      'databases.${AppWriteConstants.databaseId}.collections.${AppWriteConstants.tweetCollectionId}.documents'
+    ]).stream;
   }
 
   @override
@@ -123,7 +121,6 @@ class TweetsApiImpl implements TweetsApi {
         databaseId: AppWriteConstants.databaseId,
         collectionId: AppWriteConstants.tweetCollectionId,
         queries: [
-
           ///catch all replies of a particular tweet which its id matches replied to id
           Query.equal('repliedTo', tweetModel.id),
         ]);
@@ -134,8 +131,20 @@ class TweetsApiImpl implements TweetsApi {
   Future<Document> getTweetById(String id) async {
     final res = await _databases.getDocument(
         databaseId: AppWriteConstants.databaseId,
-        collectionId:  AppWriteConstants.tweetCollectionId,
+        collectionId: AppWriteConstants.tweetCollectionId,
         documentId: id);
     return res;
+  }
+
+  @override
+  Future<List<Document>> getUserProfileTweets(String uid) async {
+    final userTweets = await _databases.listDocuments(
+      databaseId: AppWriteConstants.databaseId,
+      collectionId: AppWriteConstants.tweetCollectionId,
+      queries: [
+        Query.equal('uid', uid),
+      ],
+    );
+    return userTweets.documents;
   }
 }
