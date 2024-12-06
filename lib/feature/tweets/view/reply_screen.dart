@@ -31,8 +31,10 @@ class ReplyScreen extends ConsumerWidget {
               TweetsCard(tweetModel: tweetModel),
               ref.watch(getRepliedTweetsProvider(tweetModel)).when(
                   data: (tweets) {
+
                     return ref.watch(getLatestTweetProvider).when(
                           data: (data) {
+                            print('this is data'+  data.events[0]);
                             final latestTweets =
                                 TweetModel.fromJson(data.payload);
                             bool isAlreadyTweeted = false;

@@ -143,6 +143,7 @@ class TweetsApiImpl implements TweetsApi {
       collectionId: AppWriteConstants.tweetCollectionId,
       queries: [
         Query.equal('uid', uid),
+        Query.orderDesc('tweetedAt'),
       ],
     );
     return userTweets.documents;

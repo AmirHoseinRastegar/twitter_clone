@@ -31,7 +31,7 @@ class _TweetsDisplayState extends ConsumerState<TweetsDisplay> {
                         'databases.*.collections.${AppWriteConstants.tweetCollectionId}.documents.*.update')) {
                       ///by printing this we realize that tweet id for retweet count updating logic
                       ///comes between 'document.    .update' so we need middle part of it which is the id of the original tweet
-                        print(data.events[0]);
+                        print('this is data ${data.events[0]}');
                         final startingPoint= data.events[0].lastIndexOf('documents.');
                         final endPoint= data.events[0].lastIndexOf('.update');
                         ///the +10 is for ignoring documents. which is 10 digits long

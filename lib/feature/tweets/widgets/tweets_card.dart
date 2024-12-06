@@ -49,7 +49,7 @@ class TweetsCard extends ConsumerWidget {
                         children: [
                           if (tweetModel.retweetedBy.isNotEmpty)
                             Row(
-                              children: <Widget>[
+                              children: [
                                 SvgPicture.asset(
                                   AssetsConstants.retweetIcon,
                                   color: ColorsPallet.greyColor,
