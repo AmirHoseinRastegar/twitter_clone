@@ -11,6 +11,7 @@ import '../../../constants/appwrite_constants.dart';
 import '../../../models/tweet_model.dart';
 import '../../tweets/controller/tweet_controller.dart';
 import '../../tweets/widgets/tweets_card.dart';
+import '../view/edit_profile_view.dart';
 
 class UserProfileWidget extends ConsumerWidget {
   final UserModel userModel;
@@ -58,7 +59,11 @@ class UserProfileWidget extends ConsumerWidget {
                               horizontal: 25,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                           if(currentUser.uid == userModel.uid){
+                             Navigator.push(context, EditProfileView.route());
+                           }
+                          },
                           child: Text(
                             currentUser.uid == userModel.uid
                                 ? 'Edit Profile'
