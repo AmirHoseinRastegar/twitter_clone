@@ -11,6 +11,8 @@ import 'package:twitter_clone/constants/constants.dart';
 import 'package:twitter_clone/feature/auth/controller/auth_controller.dart';
 import 'package:twitter_clone/feature/tweets/widgets/hashtags_links.dart';
 import 'package:twitter_clone/feature/tweets/widgets/tweet_statuses.dart';
+import 'package:twitter_clone/feature/user_profile/view/edit_profile_view.dart';
+import 'package:twitter_clone/feature/user_profile/view/user_profile_view.dart';
 import 'package:twitter_clone/models/tweet_model.dart';
 import 'package:twitter_clone/theme/colors_pallet.dart';
 import 'package:twitter_clone/theme/theme.dart';
@@ -78,14 +80,19 @@ class TweetsCard extends ConsumerWidget {
                               Container(
                                 margin: const EdgeInsets.only(
                                     right: 12, top: 0, left: 0),
-                                child: CircleAvatar(
-                                  onBackgroundImageError:
-                                      (exception, stackTrace) => const Center(
-                                    child: Icon(Icons.error),
-                                  ),
-                                  radius: 20,
-                                  backgroundImage: NetworkImage(
-                                    data.profilePic,
+                                child: GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(context, UserProfileView.route(data));
+                                  },
+                                  child: CircleAvatar(
+                                    onBackgroundImageError:
+                                        (exception, stackTrace) => const Center(
+                                      child: Icon(Icons.error),
+                                    ),
+                                    radius: 20,
+                                    backgroundImage: NetworkImage(
+                                      data.profilePic,
+                                    ),
                                   ),
                                 ),
                               ),

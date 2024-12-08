@@ -17,6 +17,8 @@ abstract class UserApi {
   Future<Document> getUserData({required String uid});
 
   Future<List<Document>> searchUserByName({required String name});
+
+  FutureEitherVoid updateUserData(UserModel userModel);
 }
 
 class UserApiImpl implements UserApi {
@@ -68,4 +70,30 @@ class UserApiImpl implements UserApi {
     );
     return docs.documents;
   }
+
+  @override
+  FutureEitherVoid updateUserData(UserModel userModel) async{
+    try {
+      await _databases.updateDocument(
+        databaseId: AppWriteConstants.databaseId,
+        collectionId: AppWriteConstants.userCollectionId,
+        documentId: userModel.uid,
+        data: userModel.toMap(),
+      );
+      return right(null);
+    } on AppwriteException catch (e, st) {
+      return left(
+        Failure(e.message ?? 'Unexpected error occurred', st),
+      );
+    } catch (e, st) {
+      return left(
+        Failure(
+          e.toString(),
+          st,
+        ),
+      );
+    }
+  }
+
+
 }
