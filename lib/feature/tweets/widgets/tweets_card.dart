@@ -107,17 +107,21 @@ class TweetsCard extends ConsumerWidget {
                                           margin:
                                               const EdgeInsets.only(right: 7),
                                           child: Text(
+
                                             data.name,
                                             style: const TextStyle(
                                                 fontSize: 21,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Text(
-                                          '@${data.name} . ${timeago.format(tweetModel.tweetedAt, locale: 'en_short')}',
-                                          style: const TextStyle(
-                                              fontSize: 17,
-                                              color: ColorsPallet.greyColor),
+                                        Flexible(
+                                          child: Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            '@${data.name} . ${timeago.format(tweetModel.tweetedAt, locale: 'en_short')}',
+                                            style: const TextStyle(
+                                                fontSize: 17,
+                                                color: ColorsPallet.greyColor),
+                                          ),
                                         ),
                                       ],
                                     ),

@@ -22,10 +22,21 @@ class EditProfileView extends ConsumerStatefulWidget {
 }
 
 class _EditProfileViewState extends ConsumerState<EditProfileView> {
-  final nameController = TextEditingController();
-  final bioController = TextEditingController();
+  late TextEditingController nameController;
+
+  late TextEditingController bioController;
+
   File? bannerFile;
   File? profileFile;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(
+        text: ref.read(userDetailProvider).value?.name ?? '');
+    bioController = TextEditingController(
+        text: ref.read(userDetailProvider).value?.bio ?? '');
+  }
 
   void selectBannerImage() async {
     final banner = await pickImage();
@@ -65,7 +76,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                 ref
                     .read(useProfileControllerProvider.notifier)
                     .updateUserProfileData(
-                        userModel: currentUser!,
+                        userModel: currentUser!.copyWith(
+                          bio: bioController.text,
+                          name: nameController.text,
+                        ),
                         context: context,
                         profileFile: profileFile,
                         bannerFile: bannerFile);
